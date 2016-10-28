@@ -19,7 +19,8 @@ module TheSortableTreeHelper
 
   def define_class_of_elements_of tree
     case
-      when tree.is_a?(ActiveRecord::Relation) then tree.name.to_s.underscore.downcase
+      when defined?(::ActiveRecord::Base) && tree.is_a?(::ActiveRecord::Relation) then tree.name.to_s.underscore.downcase
+      when defined?(::Mongoid) && tree.is_a?(::Mongoid::Criteria) then tree.name.to_s.underscore.downcase
       when tree.empty?                        then nil
       else tree.first.class.to_s.underscore.downcase
     end
