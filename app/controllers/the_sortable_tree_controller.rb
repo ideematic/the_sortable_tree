@@ -17,13 +17,8 @@ module TheSortableTreeController
   module ExpandNode
     include DefineVariablesMethod
     def expand_node
-      if defined?(::ActiveRecord::Base)
-        id   = params[:id].to_i
-        return render(nothing: true) unless id
-      elsif defined?(::Mongoid)
-        id = params[:id]
-        return render(nothing: true) if id.blank?
-      end
+
+      return render(nothing: true) if id.nil?
       sort = (params[:tree_sort] == 'reversed') ? 'reversed_' : nil
 
       variable, collection, klass = self.the_define_common_variables
@@ -39,28 +34,20 @@ module TheSortableTreeController
     include DefineVariablesMethod
     public
     def rebuild
-      if defined?(::ActiveRecord::Base)
-        id        = params[:id].to_i
-        parent_id = params[:parent_id].to_i
-        prev_id   = params[:prev_id].to_i
-        next_id   = params[:next_id].to_i
-        return render(nothing: true, status: :no_content) if parent_id.zero? && prev_id.zero? && next_id.zero?
-      elsif defined?(::Mongoid)
-        id        = params[:id]
-        parent_id = params[:parent_id]
-        prev_id   = params[:prev_id]
-        next_id   = params[:next_id]
-        return render(nothing: true, status: :no_content) if parent_id.blank? && prev_id.blank? && next_id.blank?
-      end
+      id        = params[:id]
+      parent_id = params[:parent_id]
+      prev_id   = params[:prev_id]
+      next_id   = params[:next_id]
+      return render(nothing: true, status: :no_content) if parent_id.nil? && prev_id.nil? && next_id.nil?
 
       variable, collection, klass = self.the_define_common_variables
       variable = self.instance_variable_set(variable, klass.find(id))
 
-      if prev_id.zero? && next_id.zero?
+      if prev_id.nil? && next_id.nil?
         variable.move_to_child_of klass.find(parent_id)
-      elsif !prev_id.zero?
+      elsif !prev_id.nil?
         variable.move_to_right_of klass.find(prev_id)
-      elsif !next_id.zero?
+      elsif !next_id.nil?
         variable.move_to_left_of klass.find(next_id)
       end
 
@@ -72,28 +59,20 @@ module TheSortableTreeController
     include DefineVariablesMethod
     public
     def rebuild
-      if defined?(::ActiveRecord::Base)
-        id        = params[:id].to_i
-        parent_id = params[:parent_id].to_i
-        prev_id   = params[:prev_id].to_i
-        next_id   = params[:next_id].to_i
-        return render(nothing: true, status: :no_content) if parent_id.zero? && prev_id.zero? && next_id.zero?
-      elsif defined?(::Mongoid)
-        id        = params[:id]
-        parent_id = params[:parent_id]
-        prev_id   = params[:prev_id]
-        next_id   = params[:next_id]
-        return render(nothing: true, status: :no_content) if parent_id.blank? && prev_id.blank? && next_id.blank?
-      end
+      id        = params[:id]
+      parent_id = params[:parent_id]
+      prev_id   = params[:prev_id]
+      next_id   = params[:next_id]
+      return render(nothing: true, status: :no_content) if parent_id.nil? && prev_id.nil? && next_id.nil?
 
       variable, collection, klass = self.the_define_common_variables
       variable = self.instance_variable_set(variable, klass.find(id))
 
-      if prev_id.zero? && next_id.zero?
+      if prev_id.nil? && next_id.nil?
         variable.move_to_child_of klass.find(parent_id)
-      elsif !prev_id.zero?
+      elsif !prev_id.nil?
         variable.move_to_left_of klass.find(prev_id)
-      elsif !next_id.zero?
+      elsif !next_id.nil?
         variable.move_to_right_of klass.find(next_id)
       end
 
