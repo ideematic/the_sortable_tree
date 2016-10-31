@@ -71,6 +71,7 @@ module TheSortableTreeController
   module ReversedRebuild
     include DefineVariablesMethod
     public
+    def rebuild
       if defined?(::ActiveRecord::Base)
         id        = params[:id].to_i
         parent_id = params[:parent_id].to_i
